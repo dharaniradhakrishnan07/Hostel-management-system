@@ -2,6 +2,8 @@
   "name": "hostel-management-system-backend",
   "version": "1.0.0",
   "main": "server.js",
+  "description": "Backend API for the hostel management system",
+  "author": "Your Name <your.email@example.com>",
   "dependencies": {
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
@@ -12,16 +14,17 @@
     "mongoose": "^5.13.23",
     "stripe": "^8.222.0"
   },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
   "scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js"
-},
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "description": "",
-  "devDependencies": {
-    "nodemon": "^3.1.9"
+  "engines": {
+    "node": "14.x"
   }
 }
