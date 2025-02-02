@@ -1,5 +1,3 @@
-// src/pages/Dashboard.js
-
 import React, { useEffect, useState } from 'react';
 import api from '../services/api'; // Import the axios instance
 
@@ -56,7 +54,7 @@ const Dashboard = () => {
             </div>
           ))
         ) : (
-          <p>No rooms available.</p>  {/* Show message if there are no rooms */}
+          <p>No rooms available.</p>
         )}
       </div>
     </div>
