@@ -37,7 +37,7 @@ const Dashboard = () => {
     return (
       <div className="p-4">
         <h1 className="text-xl font-semibold">Dashboard</h1>
-        <p className="text-red-500">{error}</p>  {/* Show error message */}
+        <p className="text-red-500">{error}</p>
       </div>
     );
   }
