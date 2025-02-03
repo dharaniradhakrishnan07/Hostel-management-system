@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../services/api'; // Import the axios instance
+import api from '../services/api';
+import Rooms from '../components/RoomList';
 
 const Dashboard = () => {
   // State to store rooms data, loading state, and errors
@@ -45,18 +46,7 @@ const Dashboard = () => {
   return (
     <div className="p-4">
       <h1 className="text-xl font-semibold">Dashboard</h1>
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        {rooms.length > 0 ? (
-          rooms.map((room) => (
-            <div key={room.roomNumber} className="border p-4 rounded-md shadow-md">
-              <h3 className="font-semibold">Room Number: {room.roomNumber}</h3>
-              <p>Status: {room.isAvailable ? 'Available' : 'Allocated'}</p>
-            </div>
-          ))
-        ) : (
-          <p>No rooms available.</p>
-        )}
-      </div>
+      <Rooms/>
     </div>
   );
 };

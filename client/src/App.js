@@ -1,11 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Billing from './pages/Billing';
 import RoomAllocation from './components/RoomAllocation';
 import MaintenanceRequest from './components/MaintenanceRequest';
 import Navbar from './components/Navbar';
-import './App.css';  // Import your custom CSS styles
+import Booking from './components/Booking';
+import Payment from './components/Payment';
+import success from './components/success';
+import './App.css';  
 
 function App() {
   return (
@@ -21,12 +24,12 @@ function App() {
 
           {/* Page Content */}
           <div className="content-container flex-grow overflow-auto py-6 px-4">
-            <Switch>
+            <Routes>
               <Route path="/" exact component={Dashboard} />
               <Route path="/billing" component={Billing} />
               <Route path="/room-allocation" component={RoomAllocation} />
               <Route path="/maintenance-request" component={MaintenanceRequest} />
-            </Switch>
+            </Routes>
           </div>
         </div>
       </div>
