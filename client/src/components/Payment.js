@@ -1,63 +1,55 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React from 'react';
 
-const Payment = () => {
-  const { roomId } = useParams(); // Get room ID from the URL
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const navigate = useNavigate();
+const Payment = ({ amount, receipt }) => {
+  const handlePayment = async () => {
+    // Create order via backend
+    const response = await fetch('/api/payment/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, receipt }),
+    });
 
-  const handlePayment = () => {
-    // Simulate successful payment
-    setPaymentSuccess(true);
-    // Navigate to success page after payment is successful
-    navigate(`/success/${roomId}`);
+    const order = await response.json();
+
+    // Open Razorpay modal
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Hostel Management System',
+      description: 'Hostel Fee Payment',
+      order_id: order.id,
+      handler: async (response) => {
+        // Verify payment
+        const verificationResponse = await fetch('/api/payment/verify-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_id: response.razorpay_order_id,
+            payment_id: response.razorpay_payment_id,
+            signature: response.razorpay_signature,
+          }),
+        });
+        const result = await verificationResponse.json();
+        if (result.success) {
+          alert('Payment Successful!');
+        } else {
+          alert('Payment Failed!');
+        }
+      },
+      prefill: {
+        name: 'John Doe',
+        email: 'john@example.com',
+        contact: '9999999999',
+      },
+      theme: { color: '#3399cc' },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
-  return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Payment</h2>
-      <p>Room ID: {roomId}</p>
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="card-number">
-          Card Number
-        </label>
-        <input
-          type="text"
-          id="card-number"
-          className="border p-2 w-full mb-4"
-          placeholder="Enter card number"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="expiration-date">
-          Expiration Date
-        </label>
-        <input
-          type="text"
-          id="expiration-date"
-          className="border p-2 w-full mb-4"
-          placeholder="MM/YY"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2" htmlFor="cvv">
-          CVV
-        </label>
-        <input
-          type="text"
-          id="cvv"
-          className="border p-2 w-full mb-4"
-          placeholder="CVV"
-        />
-      </div>
-      <button
-        onClick={handlePayment}
-        className="bg-green-600 text-white py-2 px-4 rounded"
-      >
-        Pay Now
-      </button>
-    </div>
-  );
+  return <button onClick={handlePayment}>Pay ₹{amount}</button>;
 };
 
 export default Payment;

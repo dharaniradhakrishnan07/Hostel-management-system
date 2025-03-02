@@ -6,7 +6,8 @@ const roomRoutes = require('./routes/roomRoutes');
 const maintenanceRoutes = require('./routes/maintenanceRoutes');
 //const billingRoutes = require('./routes/billingRoutes');
 const authRoutes = require('./routes/authRoutes');
-const connectDB = require('./config/db');  // Import the MongoDB connection function
+const connectDB = require('./config/db');  
+const paymentRoutes = require('./routes/paymentRoutes');
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 //app.use('/api/billing', billingRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/payment', paymentRoutes);
 // Connect to MongoDB
 connectDB();  // Call the MongoDB connection function
 
