@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useParams } from 'react-router-dom';
-const success = () => {
+const Success = () => {
   const { roomId } = useParams(); // Get room ID from the URL
 
   return (
@@ -15,4 +15,4 @@ const success = () => {
   );
 };
 
-export default success;
+export default Success;
