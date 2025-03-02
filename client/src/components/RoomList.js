@@ -10,7 +10,7 @@ const RoomList = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/rooms/getRooms"); // Adjust API URL
+        const response = await fetch("https://hostel-management-system-3-b7dh.onrender.com/api/rooms/getRooms"); // Adjust API URL
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
