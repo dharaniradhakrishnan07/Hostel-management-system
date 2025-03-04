@@ -1,23 +1,33 @@
-// src/pages/MaintenanceRequest.js
-
 import React, { useState } from 'react';
 import api from '../services/api';
 
 const MaintenanceRequest = () => {
-  const [description, setDescription] = useState('');
-  const [roomId, setRoomId] = useState('');
+  const [formData, setFormData] = useState({
+    description: '',  // Issue description
+    roomId: '',       // Room ID
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async () => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      await api.post('/maintenance-request', { description, roomId });
+      const response = await api.post('/maintenance-request', formData);
       alert('Maintenance request submitted successfully!');
+      console.log('Success:', response.data);
     } catch (err) {
-      setError('Failed to submit maintenance request.');
+      setError(err.response?.data?.error || 'Submission failed');
     } finally {
       setLoading(false);
     }
@@ -30,16 +40,18 @@ const MaintenanceRequest = () => {
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <textarea
+        name="description"
         placeholder="Describe the issue"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={formData.description}
+        onChange={handleChange}
         className="border p-2 mb-4 w-full"
       />
       <input
+        name="roomId"
         type="text"
         placeholder="Room ID"
-        value={roomId}
-        onChange={(e) => setRoomId(e.target.value)}
+        value={formData.roomId}
+        onChange={handleChange}
         className="border p-2 mb-4"
       />
       <button

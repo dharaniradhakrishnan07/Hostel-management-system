@@ -1,5 +1,3 @@
-// src/pages/RoomAllocation.js
-
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 
@@ -14,9 +12,12 @@ const RoomAllocation = () => {
     const fetchRooms = async () => {
       try {
         const response = await api.get('/rooms');
-        setRooms(response.data);
+        // Ensure the response is an array
+        const roomsData = Array.isArray(response.data) ? response.data : [];
+        setRooms(roomsData);
       } catch (err) {
         setError('Failed to fetch rooms.');
+        setRooms([]); // Fallback to empty array
       }
     };
 
