@@ -4,26 +4,42 @@ const Resident = require('../models/Resident');
 const router = express.Router();
 
 // Route to allocate a room to a resident
-router.post('/allocate', async (req, res) => {
+router.post('/allocate-room', async (req, res) => {
   const { roomNumber, residentId } = req.body;
 
-  const room = await Room.findOne({ roomNumber });
-  if (!room || room.status === 'occupied') {
-    return res.status(400).send('Room is not available');
+  try {
+    // Find the room by roomNumber
+    const room = await Room.findOne({ roomNumber });
+    
+    // Check if the room exists and if it's available
+    if (!room || room.status === 'occupied') {
+      return res.status(400).send('Room is not available');
+    }
+
+    // Allocate the room by setting its status to 'occupied'
+    room.status = 'occupied';
+    await room.save();
+
+    // Find the resident by residentId
+    const resident = await Resident.findById(residentId);
+    
+    // If the resident is found, assign the room number to them
+    if (!resident) {
+      return res.status(400).send('Resident not found');
+    }
+
+    resident.roomNumber = roomNumber;
+    await resident.save();
+
+    res.status(200).send('Room allocated successfully');
+  } catch (err) {
+    console.error('Error allocating room:', err);
+    res.status(500).send('Server error');
   }
-
-  room.status = 'occupied';
-  await room.save();
-
-  const resident = await Resident.findById(residentId);
-  resident.roomNumber = roomNumber;
-  await resident.save();
-
-  res.status(200).send('Room allocated successfully');
 });
 
-// New route to fetch all rooms (GET API)
-router.get('/getRooms', async (req, res) => {
+// Route to fetch all rooms (GET API)
+router.get('/rooms', async (req, res) => {
   try {
     const rooms = await Room.find();  // Fetch all rooms from the database
     res.status(200).json(rooms);      // Send the rooms as JSON response
@@ -32,7 +48,8 @@ router.get('/getRooms', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.get("/",(req,res)=>{res.json("working..roomRoutes")})
+
+// Route to create a new room
 router.post('/rooms', async (req, res) => {
   const { room_name, type, size, capacity, amenities, price } = req.body;
 
@@ -62,6 +79,11 @@ router.post('/rooms', async (req, res) => {
       error: error.message
     });
   }
+});
+
+// A simple test route to verify the server is working
+router.get("/", (req, res) => {
+  res.json("working..roomRoutes");
 });
 
 module.exports = router;
